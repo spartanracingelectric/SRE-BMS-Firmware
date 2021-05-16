@@ -135,8 +135,8 @@ void modPowerElectronicsInit(modPowerElectronicsPackStateTypedef *packState, mod
 			modPowerElectronicsPackStateHandle->auxModuleVoltages[modulePointer][auxPointer] = 0.0f;
 	}
 	// init the exp module variables empty
-	for( uint8_t modulePointer = 0; modulePointer < NoOfCellMonitorsPossibleOnBMS; modulePointer++) {
-		for(uint8_t expPointer = 0; expPointer < modPowerElectronicsGeneralConfigHandle->noOfTempSensorPerModule; expPointer++)
+	for( uint8_t modulePointer = 0; modulePointer < modPowerElectronicsGeneralConfigHandle->noOfExpansionBoard; modulePointer++) {
+		for(uint8_t expPointer = 0; expPointer < modPowerElectronicsGeneralConfigHandle->noOfTempSensorPerExpansionBoard; expPointer++)
 			modPowerElectronicsPackStateHandle->expModuleVoltages[modulePointer][expPointer] = 0.0f;
 	}
 	
