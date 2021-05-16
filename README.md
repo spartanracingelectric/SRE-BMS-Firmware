@@ -28,7 +28,24 @@ EV.8.4.2 Cell Voltage levels must remain inside the allowed minimum and maximum 
 
 EV.8.5.2 Temperatures must remain below the allowed maximum cell temperature limit stated in the cell data sheet or 60°C, whichever is lower. Measurement accuracy must be considered.
 
-# Other parts of this project
+## Compiling with ARM-GCC
+You can manipulate the makefile to choose which files you want included in the compilation.
+
+#### Windows
+1. Install WSL using the Ubuntu distro
+2. In the WSL terminal, `sudo apt-get update` and `sudo apt update`
+3. `sudo apt install make` and `sudo apt install gcc-arm-none-eabi`
+4. Run the makefile in the root directory by running `make`.
+
+#### Ubuntu/Linux Mint
+1. In the WSL terminal, `sudo apt-get update` and `sudo apt update`
+2. `sudo apt install make` and `sudo apt install gcc-arm-none-eabi`
+3. Run the makefile in the root directory by running `make`.
+
+## Compiling with MDK
+Ask Sean lol. Licensing = pain
+
+## Other parts of this project
 
 This is the firmware repository containing all firmware source files. There are three more repositories for this project:
 
