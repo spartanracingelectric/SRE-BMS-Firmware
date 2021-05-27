@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include "driverHWUART2.h"
-#include "libRingBuffer.h"
+#include "libRingbuffer.h"
 
 #define RINGBUFFERSIZE									1024
 
