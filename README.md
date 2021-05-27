@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ## Rules related to BMS software
 
 #### EV.8.3 Accumulator Management System - AMS
