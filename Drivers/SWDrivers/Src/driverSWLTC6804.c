@@ -99,20 +99,6 @@ void driverSWLTC6804ResetStatusRegisters(void) {
   driverSWLTC6804Write(cmd,4);
 }
 
-void driverSWLTC6804ResetAuxVoltageRegisters(void) {
-  uint8_t cmd[4];
-  uint16_t cmd_pec;
-
-  cmd[0] = 0x07;
-  cmd[1] = 0x12;
-  cmd_pec = driverSWLTC6804CalcPEC15(2, cmd);
-  cmd[2] = (uint8_t)(cmd_pec >> 8);
-  cmd[3] = (uint8_t)(cmd_pec);
-  
-  driverSWLTC6804WakeIC();     //This will guarantee that the LTC6804 isoSPI port is awake. This command can be removed.
-  driverSWLTC6804Write(cmd,4);
-}
-
 void driverSWLTC6804StartCellAndAuxVoltageConversion(uint8_t MD,uint8_t DCP) {	
   uint8_t cmd[4];
   uint16_t cmd_pec;

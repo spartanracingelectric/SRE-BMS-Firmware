@@ -33,6 +33,7 @@
 #include "stdbool.h"
 #include "math.h"
 #include "driverSWSHT21.h"
+#include "driverSWHTC1080.h"
 
 
 #define NoOfCellsPossibleOnBMS	      	180

@@ -22,7 +22,6 @@ History
 *.ini
 *.lst
 *.axf
-*.elf
 *.hex
 *.dep
 *.map

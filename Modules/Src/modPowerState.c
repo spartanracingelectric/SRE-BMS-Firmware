@@ -130,13 +130,8 @@ bool modPowerStatePowerdownRequest(void) {
 	if(modPowerStateGeneralConfigHandle->pulseToggleButton){
 		returnValue = modPowerStatePulsePowerDownDesired;
 	}else{
-		if(modPowerStateGeneralConfigHandle->togglePowerModeDirectHCDelay){
 			returnValue = !modPowerStateButtonPressedVar;
-		}else{
-			returnValue = false;
 		}
-	}
-	
 	return returnValue;
 };
 

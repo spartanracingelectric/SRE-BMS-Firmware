@@ -5,7 +5,7 @@
 #include "driverHWI2C1.h"
 #include "generalDefines.h"
 
-#ifdef HWVersion_SS
+#if (ENNOID_SS || ENNOID_SS_LITE)
 #define ISL28022_MASTER_ADDRES      0x45
 #else
 #define ISL28022_MASTER_ADDRES      0x40

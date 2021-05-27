@@ -145,8 +145,11 @@ void modPowerElectronicsInit(modPowerElectronicsPackStateTypedef *packState, mod
 	// Init the external bus monitor
   modPowerElectronicsInitISL();
 	
-	#ifdef HWVersion_SS
-	driverSWSHT21Init();
+	#if (ENNOID_SS || ENNOID_SS_LITE)
+		if(modPowerElectronicsGeneralConfigHandle->humidityICType == si7020)
+			driverSWSHT21Init();
+		else
+			driverSWHTC1080Init();
 	#endif
 	
 	// Init internal ADC
@@ -194,22 +197,33 @@ bool modPowerElectronicsTask(void) {
     // Read the battery cell voltages and temperatures with the cell monitor ICs
 		modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData();
 		
-		// get PCB mounted temperature sensor
-		#ifdef HWVersion_SS
-			static uint32_t measureSHTStartLastTick          = 0;
-			static driverSWSHT21MeasureType lastMeasuredType = TEMP;
-			if(driverSWSHT21PollMeasureReady()){
-				modPowerElectronicsPackStateHandle->temperatures[0] = driverSWSHT21GetTemperature();
-				modPowerElectronicsPackStateHandle->humidity        = driverSWSHT21GetHumidity();
-			}
-			if(modDelayTick1ms(&measureSHTStartLastTick,500)){
-				driverSWSHT21StartMeasurement(lastMeasuredType);
+		// get PCB mounted temperature sensor & humitity if applicable
+		#if (ENNOID_SS || ENNOID_SS_LITE)
+			if(modPowerElectronicsGeneralConfigHandle->humidityICType == si7020){
+				static uint32_t measureSHTStartLastTick          = 0;
+				static driverSWSHT21MeasureType lastMeasuredType = TEMP;
+				if(driverSWSHT21PollMeasureReady()){
+					modPowerElectronicsPackStateHandle->temperatures[0] = driverSWSHT21GetTemperature();
+					modPowerElectronicsPackStateHandle->humidity        = driverSWSHT21GetHumidity();
+				}
+				if(modDelayTick1ms(&measureSHTStartLastTick,500)){
+					driverSWSHT21StartMeasurement(lastMeasuredType);
 		
-			if(lastMeasuredType == TEMP)																																							// Toggle between SHT21 sensor modes
-				lastMeasuredType = HUMIDITY;
-			else
-				lastMeasuredType = TEMP;
-		}
+				if(lastMeasuredType == TEMP)																																							// Toggle between SHT21 sensor modes
+					lastMeasuredType = HUMIDITY;
+				else
+					lastMeasuredType = TEMP;
+				}
+			}else{
+				static uint32_t measureHTC1080StartLastTick          = 0;
+				if(driverSWHTC1080PollMeasureReady()){
+					modPowerElectronicsPackStateHandle->temperatures[0] = driverSWHTC1080GetTemperature();
+					modPowerElectronicsPackStateHandle->humidity        = driverSWHTC1080GetHumidity();
+				}
+				if(modDelayTick1ms(&measureHTC1080StartLastTick,500)){
+					driverSWHTC1080StartMeasurement();
+				}
+			};
 		#else
 			driverHWADCGetNTCValue(&modPowerElectronicsPackStateHandle->temperatures[0],modPowerElectronicsGeneralConfigHandle->NTC25DegResistance[modConfigNTCGroupMasterPCB],modPowerElectronicsGeneralConfigHandle->NTCTopResistor[modConfigNTCGroupMasterPCB],modPowerElectronicsGeneralConfigHandle->NTCBetaFactor[modConfigNTCGroupMasterPCB],25.0f);
 		#endif
@@ -219,9 +233,6 @@ bool modPowerElectronicsTask(void) {
 		
 		// Do the balancing task
 		modPowerElectronicsSubTaskBalancing();
-		
-		// Handle buzzer desires
-		modPowerElectronicsSubTaskBuzzer();
 		
 		// Measure cell voltages
 		modPowerElectronicsCellMonitorsStartCellConversion();
@@ -542,16 +553,15 @@ void modPowerElectronicsUpdateSwitches(void) {
 	}else{
 		driverHWSwitchesSetSwitchState(SWITCH_CHARGE,(driverHWSwitchesStateTypedef)SWITCH_RESET);
 	};
-	#ifdef HWVersion_SS
+	#if (ENNOID_SS || ENNOID_SS_LITE)
 	//Handle chargePFET input
 	if(modPowerElectronicsPackStateHandle->chargePFETDesired && modPowerElectronicsPackStateHandle->chargeAllowed){
 		driverHWSwitchesSetSwitchState(SWITCH_CHARGE_BYPASS,(driverHWSwitchesStateTypedef)SWITCH_SET);
 	}else{
 		driverHWSwitchesSetSwitchState(SWITCH_CHARGE_BYPASS,(driverHWSwitchesStateTypedef)SWITCH_RESET);
 	};
-	#endif
 	//Handle cooling output
-	#ifndef HWVersion_SS
+	#else
 	if(modPowerElectronicsPackStateHandle->coolingDesired && modPowerElectronicsPackStateHandle->coolingAllowed)
 		driverHWSwitchesSetSwitchState(SWITCH_COOLING,(driverHWSwitchesStateTypedef)SWITCH_SET);
 	else
@@ -873,41 +883,6 @@ void modPowerElectronicsCheckPackSOA(void) {
 	}
 }
 
-
-void modPowerElectronicsSubTaskBuzzer(void) {
-  bool buzzerEnabledState = false;
-	
-	// determin whether buzzer should sound
-  switch(modPowerElectronicsGeneralConfigHandle->buzzerSignalSource) {
-		case buzzerSourceOff:
-			buzzerEnabledState = false;
-			break;
-		case buzzerSourceOn:
-			buzzerEnabledState = true;
-			break;
-		case buzzerSourceLC:
-			break;
-		case buzzerSourceSOA:
-			break;
-		default:
-			buzzerEnabledState = false;
-			break;
-	}
-	
-  // update buzzer state every second
-	if(modDelayTick1ms(&modPowerElectronicsBuzzerUpdateIntervalLastTick,1000)) {
-		if(buzzerEnabledState) {
-		  modEffectChangeState(STAT_BUZZER,(STATStateTypedef)modPowerElectronicsGeneralConfigHandle->buzzerSignalType);
-			modPowerElectronicsPackStateHandle->buzzerOn = true;
-		}else{
-		  if(!modPowerElectronicsGeneralConfigHandle->buzzerSignalPersistant) {
-				modEffectChangeState(STAT_BUZZER,STAT_RESET);
-				modPowerElectronicsPackStateHandle->buzzerOn = false;
-			}
-		}
-	}
-}
-
 bool modPowerElectronicsHCSafetyCANAndPowerButtonCheck(void) {
 	if(modPowerElectronicsGeneralConfigHandle->useCANSafetyInput)
 		return (modPowerElectronicsPackStateHandle->safetyOverCANHCSafeNSafe && (modPowerElectronicsPackStateHandle->powerButtonActuated | modPowerElectronicsGeneralConfigHandle->pulseToggleButton));
@@ -954,10 +929,9 @@ void modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData(void){
 			// TODO: Implement
 			
 			// Read cell voltages
-			if(!modPowerElectronicsPackStateHandle->balanceActive){
 			driverSWLTC6804ReadCellVoltagesArray(modPowerElectronicsPackStateHandle->cellModuleVoltages);
 			modPowerElectronicsCellMonitorsArrayTranslate();
-			}
+			
 				
 			// Convert modules to full array
 			
@@ -1019,24 +993,23 @@ void modPowerElectronicsExpMonitorsArrayTranslate(void) {
 
 void modPowerElectronicsCellMonitorsStartCellConversion(void) {
 	modPowerElectronicsCellMonitorsCheckAndSolveInitState();
-	driverSWLTC6804StartCellAndAuxVoltageConversion(MD_FILTERED,DCP_ENABLED);
 	driverSWLTC6804ResetCellVoltageRegisters();
+	driverSWLTC6804StartCellVoltageConversion(MD_FILTERED,DCP_DISABLED,CELL_CH_ALL);
 }
 
 void modPowerElectronicsCellMonitorsStartLoadedCellConversion(bool PUP) {
 	modPowerElectronicsCellMonitorsCheckAndSolveInitState();
-
-				driverSWLTC6804StartLoadedCellVoltageConversion(MD_FILTERED,DCP_ENABLED,CELL_CH_ALL,PUP);
-				driverSWLTC6804ResetCellVoltageRegisters();
+	driverSWLTC6804ResetCellVoltageRegisters();
+	driverSWLTC6804StartLoadedCellVoltageConversion(MD_FILTERED,DCP_ENABLED,CELL_CH_ALL,PUP);
 }
 
 void modPowerElectronicsCellMonitorsStartTemperatureConversion(void) {
 	modPowerElectronicsCellMonitorsCheckAndSolveInitState();
 	
-      // GPIO1 & GPIO2 aux are measured simultaniously with cell voltages.
 			// For other GPIOs voltages conversions, the below functions are used.
-				driverSWLTC6804StartAuxVoltageConversion(MD_FILTERED, AUX_CH_ALL);
 				driverSWLTC6804ResetAuxRegisters();
+				driverSWLTC6804StartAuxVoltageConversion(MD_FILTERED, AUX_CH_ALL);
+				
 }
 
 void modPowerElectronicsCellMonitorsEnableBalanceResistors(uint32_t balanceEnableMask){
@@ -1103,10 +1076,10 @@ void modPowerElectronicsTerminalCellConnectionTest(int argc, const char **argv) 
 	
 	
 	// Start of connection test
-	while(!modDelayTick100ms(&delayLastTick,3)){};                     // Wait 
+	while(!modDelayTick100ms(&delayLastTick,2)){};                     // Wait 
 	modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData();	   // Read cell voltages from monitor
 	modPowerElectronicsCellMonitorsStartCellConversion();              // Start ADC conversion
-	while(!modDelayTick100ms(&delayLastTick,3)){};                     // Wait
+	while(!modDelayTick100ms(&delayLastTick,2)){};                     // Wait
   modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData();	   // Read cell voltages from monitor
 	for(cellIDPointer = 0; cellIDPointer < modPowerElectronicsGeneralConfigHandle->noOfCellsSeries ; cellIDPointer++){
 	  conversionResults[4][cellIDPointer] = modPowerElectronicsPackStateHandle->cellVoltagesIndividual[cellIDPointer].cellVoltage;
@@ -1151,13 +1124,13 @@ void modPowerElectronicsTerminalCellConnectionTest(int argc, const char **argv) 
 		if((conversionResults[0][cellIDPointer] >= modPowerElectronicsGeneralConfigHandle->cellHardOverVoltage) || (conversionResults[0][cellIDPointer] <= modPowerElectronicsGeneralConfigHandle->cellHardUnderVoltage)) {
 			overAllPassFail = passFail = false;
 		}else{
-			if((cellIDPointer != 0) && (cellIDPointer != 11) && (cellIDPointer != 1) && (fabs(difference) >= 0.05f))
+			if((cellIDPointer != 0) && (cellIDPointer != (modPowerElectronicsGeneralConfigHandle->noOfCellsSeries-1)) && (fabs(difference) >= 0.05f))
 				overAllPassFail = passFail = false;
 			else
 			  passFail = true;
 		}
 		
-	  modCommandsPrintf("[%2d] %.3fV - %.3fV = % .3fV -> %s",cellIDPointer,conversionResults[0][cellIDPointer],conversionResults[1][cellIDPointer],difference,passFail ? "Pass" : "Fail");  // Print the results
+	  modCommandsPrintf("[%2d] %.3fV - %.3fV = % .3fV -> %s",cellIDPointer+1,conversionResults[0][cellIDPointer],conversionResults[1][cellIDPointer],difference,passFail ? "Pass" : "Fail");  // Print the results
 	}
 	modCommandsPrintf("------    End connectionTest     ------");
 	modCommandsPrintf("------    Start balance test     ------");
@@ -1174,7 +1147,7 @@ void modPowerElectronicsTerminalCellConnectionTest(int argc, const char **argv) 
 	for(int delay = 0; delay < 5; delay++){
 		while(!modDelayTick100ms(&delayLastTick,3)){};                   // Wait
 		modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData();	 // Read cell voltages from monitor
-		modPowerElectronicsCellMonitorsStartCellConversion();            // Start ADC conversion
+		modPowerElectronicsCellMonitorsStartLoadedCellConversion(false);            // Start ADC conversion
 	}
 		
 	while(!modDelayTick100ms(&delayLastTick,3)){};                     // Wait
@@ -1192,7 +1165,7 @@ void modPowerElectronicsTerminalCellConnectionTest(int argc, const char **argv) 
 	for(int delay = 0; delay < 5; delay++){
 		while(!modDelayTick100ms(&delayLastTick,3)){};                   // Wait
 		modPowerElectronicsCellMonitorsCheckConfigAndReadAnalogData();	 // Read cell voltages from monitor
-		modPowerElectronicsCellMonitorsStartCellConversion();            // Start ADC conversion
+		modPowerElectronicsCellMonitorsStartLoadedCellConversion(false); // Start ADC conversion
 	}
 		
 	while(!modDelayTick100ms(&delayLastTick,3)){};                     // Wait
@@ -1212,7 +1185,7 @@ void modPowerElectronicsTerminalCellConnectionTest(int argc, const char **argv) 
 		else
 			overAllPassFail = passFail = false;
 		
-	  modCommandsPrintf("[%2d] %.3fV - %.3fV = % .3fV -> %s",cellIDPointer,conversionResults[2][cellIDPointer],conversionResults[3][cellIDPointer],difference,passFail ? "Pass" : "Fail");  // Print the results
+	  modCommandsPrintf("[%2d] %.3fV - %.3fV = % .3fV -> %s",cellIDPointer+1,conversionResults[2][cellIDPointer],conversionResults[3][cellIDPointer],difference,passFail ? "Pass" : "Fail");  // Print the results
 	}
 	
 	modCommandsPrintf("------    End balance test     ------");
@@ -1285,9 +1258,14 @@ float modPowerElectronicsCalcPackCurrent(void){
 void modPowerElectronicsLCSenseSample(void) {
 		driverSWISL28022GetBusCurrent(ISL28022_MASTER_ADDRES,ISL28022_MASTER_BUS,&modPowerElectronicsPackStateHandle->loCurrentLoadCurrent,initCurrentOffset, modPowerElectronicsGeneralConfigHandle->shuntLCFactor);
 		driverHWADCGetLoadVoltage(&modPowerElectronicsPackStateHandle->loCurrentLoadVoltage, modPowerElectronicsGeneralConfigHandle->loadVoltageOffset, modPowerElectronicsGeneralConfigHandle->loadVoltageFactor);
-	#ifdef HWVersion_SS
+		#if (ENNOID_SS_LITE)
+			modPowerElectronicsPackStateHandle->loCurrentLoadVoltage = 0;
+		#endif
+	
+	#if (ENNOID_SS || ENNOID_SS_LITE)
 		driverHWADCGetChargerVoltage(&modPowerElectronicsPackStateHandle->chargerVoltage, modPowerElectronicsGeneralConfigHandle->chargerVoltageOffset, modPowerElectronicsGeneralConfigHandle->chargerVoltageFactor);
 	#endif
+	
 	//Calculate the zero current offset
 	if(initCurrentOffsetCounter < 2){
 		//initCurrentOffsetTemp += modPowerElectronicsPackStateHandle->loCurrentLoadCurrent;

@@ -46,10 +46,12 @@ typedef enum {
 void modDisplayInit(void);
 void modDisplayShowInfo(modDisplayInfoType newState,modDisplayDataTypedef modDisplayData);
 void modDisplayTask(void);
-float modDisplay100ConvertValueToASCII(float value);
-float modDisplay10ConvertValueToASCII(float value);
-float modDisplay1ConvertValueToASCII(float value);
-float modDisplay0_1ConvertValueToASCII(float value);
-float modDisplay0_01ConvertValueToASCII(float value);
-float modDisplay0_001ConvertValueToASCII(float value);
+
+void modDisplayWrite(float value, uint8_t decimals);
+uint8_t modDisplay100ConvertValueToASCII(float value);
+uint8_t modDisplay10ConvertValueToASCII(float value);
+uint8_t modDisplay1ConvertValueToASCII(float value);
+uint8_t modDisplay0_1ConvertValueToASCII(float value);
+uint8_t modDisplay0_01ConvertValueToASCII(float value);
+uint8_t modDisplay0_001ConvertValueToASCII(float value);
 #endif
