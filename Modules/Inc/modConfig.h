@@ -54,7 +54,6 @@ typedef struct {
 	uint8_t  packVoltageDataSource;                                               // Enum value of pack voltage data source (what source to derive the voltage information from different ADC options)
 	uint8_t  packCurrentDataSource;                                               // Enum value of pack current data source (what source to derive the current information from LC/HC/LC+HC/CAN)
 	uint8_t  buzzerSignalSource;                                                  // - Stores what source shoud be taken to trigger
-	uint8_t	 buzzerSignalType;                                                    // - Stores what sound pattern should be made
 	uint8_t  buzzerSignalPersistant;                                              // - Stores whether the buzzer should stay on after triggering
 	float    shuntLCFactor;                                                       // Shunt multiplication factor Low current
 	float    voltageLCFactor;                                                     // Battery Voltage multiplication factor Low current
@@ -127,6 +126,7 @@ typedef struct {
 	uint32_t NTCTopResistor[modConfigNoOfNTCTypes];                               // NTC Pullup resistor value
 	uint32_t NTC25DegResistance[modConfigNoOfNTCTypes];                           // NTC resistance at 25 degree
 	uint16_t NTCBetaFactor[modConfigNoOfNTCTypes];                                // NTC Beta factor
+	uint8_t  humidityICType;																													// Humidity sensor IC type
 } modConfigGeneralConfigStructTypedef;
 
 modConfigGeneralConfigStructTypedef* modConfigInit(void);
