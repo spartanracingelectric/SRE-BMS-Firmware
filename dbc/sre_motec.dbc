@@ -35,7 +35,7 @@ BS_:
 BU_: DBG VCU BMS MCM
 
 BO_ 162 MCM_Temperatures3: 8 MCM
- SG_ MCM_Motor_Temperature : 32|16@1+ (1,0) [-100|1000] "" VCU
+ SG_ MCM_Motor_Temperature : 32|16@1+ (1,0) [-100|1000] "C" VCU
 
 BO_ 165 MCM_Motor_Position_Info: 8 MCM
  SG_ MCM_Motor_Angle : 0|16@1+ (1,0) [-360|360] "DEG" VCU
@@ -56,10 +56,10 @@ BO_ 167 MCM_Voltage_Info: 8 MCM
  SG_ MCM_Phase_BC_Voltage : 48|16@1+ (1,0) [-470|470] "V" VCU
 
 BO_ 1280 VCU_TPS0: 8 VCU
- SG_ VCU_TPS0_Value : 0|64@1+ (1,0) [0|0] "" VCU
+ SG_ VCU_TPS0_Value : 16|16@1+ (1,0) [0|32767] "" VCU
 
 BO_ 1281 VCU_TPS1: 8 VCU
- SG_ VCU_TPS1_Value : 0|64@1+ (1,0) [0|0] "" VCU
+ SG_ VCU_TPS1_Value : 16|16@1+ (1,0) [0|32767] "" VCU
 
 BO_ 1282 VCU_BPS: 8 VCU
  SG_ VCU_BPS_Value : 0|64@1+ (1,0) [0|0] "" VCU
