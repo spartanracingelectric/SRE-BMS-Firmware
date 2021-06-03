@@ -62,7 +62,7 @@ BO_ 1281 VCU_TPS1: 8 VCU
  SG_ VCU_TPS1_Value : 16|16@1- (0.0916590284,-3563) [0|100] "%" VCU
 
 BO_ 1282 VCU_BPS: 8 VCU
- SG_ VCU_BPS_Value : 0|64@1+ (1,0) [0|0] "" VCU
+ SG_ VCU_BPS_Value : 16|16@1- (0.02,0) [0|100] "%" VCU
 
 BO_ 1283 VCU_WSS: 8 VCU
  SG_ VCU_WSS_Value : 0|64@1+ (1,0) [0|0] "" VCU
