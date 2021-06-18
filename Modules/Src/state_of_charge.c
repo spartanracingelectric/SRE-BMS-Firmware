@@ -3,7 +3,6 @@
 typedef struct {
 	float state_of_charge; // accuraty 0.1 
 
-
 }; 
 
 static modPowerElectronicsPackStateTypedef *pack_state;
@@ -42,6 +41,4 @@ static float state_of_charge_update()
 	pack_state->SoC = ; 
 	pack_state->SoCCapacityAh = ; 
 }
-
-
 

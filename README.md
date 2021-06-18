@@ -44,7 +44,7 @@ You can manipulate the makefile to choose which files you want included in the c
 
 [Downlaod ENNOID-BMS GUI tool](https://github.com/EnnoidMe/ENNOID-BMS-Tool)
 
-## Other parts of this project
+## Memory Information
 
 When flashing the application the start address should be: <b>0x08000000</b>
 When flashing the bootloader the start address should be: <b>0x08032000</b>
