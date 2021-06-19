@@ -32,7 +32,7 @@ NS_ :
 
 BS_:
 
-BU_: DBG VCU BMS MCM
+BU_: DEBUG VCU BMS MCM MOTEC
 
 BO_ 1568 BMS_Status: 1 BMS
  SG_ BMS_Cell_Over_Voltage : 0|1@1+ (1,0) [0|0] "" VCU
@@ -42,12 +42,12 @@ BO_ 1568 BMS_Status: 1 BMS
  SG_ BMS_Power_Exceed_80kW : 4|1@1+ (1,0) [0|0] "" VCU
 
 BO_ 1571 BMS_Pack_Info: 8 BMS
- SG_ BMS_Pack_Voltage : 0|32@1- (0.01,0) [0|300] "V" VCU
- SG_ BMS_Pack_Current : 32|32@1- (0.01,-3000) [-3000|3000] "A" VCU
+ SG_ BMS_Pack_Voltage : 0|32@1- (0.1,0) [0|300.0] "V" VCU
+ SG_ BMS_Pack_Current : 32|32@1- (0.1,0) [-3000.0|3000.0] "A" VCU
 
 BO_ 1572 BMS_Load_Info: 8 BMS
- SG_ BMS_Load_Voltage : 0|32@1- (0.01,0) [0|300] "V" VCU
- SG_ BMS_Load_Current : 32|32@1- (0.01,-3000) [-3000|3000] "A" VCU
+ SG_ BMS_Load_Voltage : 0|32@1- (0.1,0) [0|300.0] "V" VCU
+ SG_ BMS_Load_Current : 32|32@1- (0.1,0) [-3000.0|3000.0] "A" VCU
 
 BO_ 1573 BMS_Cell_Voltage_High_Low: 8 BMS
  SG_ BMS_Cell_Voltage_High : 0|32@1- (0.01,0) [0|6.55] "V" VCU
@@ -62,24 +62,25 @@ BO_ 1574 BMS_Cell_Voltage_Average: 8 BMS
  SG_ BMS_Capacity : 32|32@1- (0.1,0) [0|30] "Ah" VCU
 
 BO_ 1576 BMS_Temperature_Average: 8 BMS
- SG_ BMS_Cell_Temperature_Average : 0|32@1- (0.1,-100) [-100|100] "DegreeC" VCU
- SG_ BMS_Board_Temperature_Average : 32|32@1- (0.1,-100) [-100|100] "DegresC" VCU
+ SG_ BMS_Cell_Temperature_Average : 0|32@1- (0.1,0) [-100.0|100.0] "DegreeC" VCU
+ SG_ BMS_Board_Temperature_Average : 32|32@1- (0.1,0) [-100.0|100.0] "DegreeC" VCU
 
 BO_ 1577 BMS_Cell_Temperature: 8 BMS
- SG_ BMS_Cell_Temperature_High : 0|32@1- (0.1,-100) [-100|100] "DegreeC" VCU
- SG_ BMS_Cell_Temperature_Low : 32|32@1- (0.1,0100) [-100|100] "DegreeC" VCU
+ SG_ BMS_Cell_Temperature_High : 0|32@1- (0.1,0) [-99.9|99.9] "DegreeC" VCU
+ SG_ BMS_Cell_Temperature_Low : 32|32@1- (0.1,0) [-99.9|99.9] "DegreeC" VCU
 
 BO_ 1584 BMS_Board_Temperature: 8 BMS
- SG_ BMS_Board_Temperature_High : 0|32@1- (0.1,-100) [-100|100] "DegreeC" VCU
- SG_ BMS_Board_Temperature_Low : 32|32@1- (0.1,-100) [-100|100] "DegreeC" VCU
+ SG_ BMS_Board_Temperature_High : 0|32@1- (0.1,0) [-100.0|100.0] "DegreeC" VCU
+ SG_ BMS_Board_Temperature_Low : 32|32@1- (0.1,0) [-100.0|100.0] "DegreeC" VCU
 
 BO_ 1585 BMS_Load_Power: 4 BMS
- SG_ BMS_Load_Power : 0|32@1- (0.1,-100000) [-100000|100000] "W" VCU
+ SG_ BMS_Load_Power : 0|32@1- (0.1,0) [-79999.9|79999.9] "W" VCU
 
 
 CM_ BU_ VCU "The vehicle control unit";
 CM_ BU_ MCM "The motor controller of the car";
 CM_ BU_ BMS "The battery management system";
+CM_ BU_ BMS "The Motec DAQ";
 CM_ BO_ 1568 "BMS Status and Fault Message";
 CM_ BO_ 1571 "Accumulator Pack Voltage and Current"; 
 CM_ BO_ 1572 "Accumulator Load Voltage and Current"; 
