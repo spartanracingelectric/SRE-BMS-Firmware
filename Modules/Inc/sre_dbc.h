@@ -237,14 +237,14 @@ static inline dbc_message_header_t dbc_encode_BMS_Pack_Info(uint8_t bytes[8], co
   memset(bytes, 0, 8);
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [0 -> 300.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Pack_Voltage,300.0.0f),0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Pack_Voltage,300.0f),0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[0] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B0
   bytes[1] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B8
   bytes[2] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B16
   bytes[3] |= (((uint8_t)(raw >> 24) & 0xff)     ); // 8 bits at B24
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-3000.0 -> 3000.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Pack_Current,3000.0.0f),-3000.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Pack_Current,3000.0f),-3000.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[4] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B32
   bytes[5] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B40
   bytes[6] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B48
@@ -269,14 +269,14 @@ static inline dbc_message_header_t dbc_encode_BMS_Load_Info(uint8_t bytes[8], co
   memset(bytes, 0, 8);
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [0 -> 300.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Load_Voltage,300.0.0f),0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Load_Voltage,300.0f),0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[0] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B0
   bytes[1] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B8
   bytes[2] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B16
   bytes[3] |= (((uint8_t)(raw >> 24) & 0xff)     ); // 8 bits at B24
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-3000.0 -> 3000.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Load_Current,3000.0.0f),-3000.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Load_Current,3000.0f),-3000.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[4] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B32
   bytes[5] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B40
   bytes[6] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B48
@@ -397,14 +397,14 @@ static inline dbc_message_header_t dbc_encode_BMS_Temperature_Average(uint8_t by
   memset(bytes, 0, 8);
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-100.0 -> 100.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Cell_Temperature_Average,100.0.0f),-100.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Cell_Temperature_Average,100.0f),-100.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[0] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B0
   bytes[1] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B8
   bytes[2] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B16
   bytes[3] |= (((uint8_t)(raw >> 24) & 0xff)     ); // 8 bits at B24
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-100.0 -> 100.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_Average,100.0.0f),-100.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_Average,100.0f),-100.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[4] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B32
   bytes[5] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B40
   bytes[6] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B48
@@ -461,14 +461,14 @@ static inline dbc_message_header_t dbc_encode_BMS_Board_Temperature(uint8_t byte
   memset(bytes, 0, 8);
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-100.0 -> 100.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_High,100.0.0f),-100.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_High,100.0f),-100.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[0] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B0
   bytes[1] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B8
   bytes[2] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B16
   bytes[3] |= (((uint8_t)(raw >> 24) & 0xff)     ); // 8 bits at B24
 
   // Encode to raw 32-bit SIGNED signal with scale=0.1 within range of [-100.0 -> 100.0]
-  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_Low,100.0.0f),-100.0.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
+  raw = ((uint64_t)(((MAX_OF(MIN_OF(message->BMS_Board_Temperature_Low,100.0f),-100.0f)) / 0.1f) + 0.5f)) & 0xffffffff;
   bytes[4] |= (((uint8_t)(raw >>  0) & 0xff)     ); // 8 bits at B32
   bytes[5] |= (((uint8_t)(raw >>  8) & 0xff)     ); // 8 bits at B40
   bytes[6] |= (((uint8_t)(raw >> 16) & 0xff)     ); // 8 bits at B48
