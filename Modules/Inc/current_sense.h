@@ -4,5 +4,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-bool current_sense_read(void); 
+#include "modPowerElectronics.h"
 
+float current_sense_read_10hz(float current_offset, float shunt_factor); 
