@@ -36,6 +36,7 @@
 #include "report_status.h"
 #include "state_of_charge.h"
 #include "state_of_health.h"
+#include "current_sense.h"
 // This next define enables / disables the watchdog
 //#define AllowDebug
 
@@ -75,6 +76,7 @@ int main(void) {
   // SRE Code
   safety_check_init(&packState); 
   report_status_init(&packState); 
+  current_sense_init(&packState); 
   // state_of_charge_init(&packState); 
 
   while(true) {

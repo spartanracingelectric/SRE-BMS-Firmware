@@ -6,4 +6,5 @@
 
 #include "modPowerElectronics.h"
 
-float current_sense_read_10hz(float current_offset, float shunt_factor); 
+void current_sense_init(modPowerElectronicsPackStateTypedef *copy_pack_state); 
+void current_sense_read_5hz(float current_offset, float shunt_factor);

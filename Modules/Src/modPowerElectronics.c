@@ -168,7 +168,6 @@ void modPowerElectronicsInit(modPowerElectronicsPackStateTypedef *packState, mod
 	
 	// Sample the first pack voltage moment
 	driverSWISL28022GetBusVoltage(ISL28022_MASTER_ADDRES,ISL28022_MASTER_BUS,&modPowerElectronicsPackStateHandle->packVoltage,modPowerElectronicsGeneralConfigHandle->voltageLCOffset, modPowerElectronicsGeneralConfigHandle->voltageLCFactor);
-
 	
 	// Register terminal commands
 	modTerminalRegisterCommandCallBack("testbms","Test the cell connection between cell monitor and pack and pack vs cell measurement.","[error (V)] [bal drop (mV)]",modPowerElectronicsTerminalCellConnectionTest);
@@ -1259,8 +1258,8 @@ float modPowerElectronicsCalcPackCurrent(void){
 }
 
 void modPowerElectronicsLCSenseSample(void) {
-		// driverSWISL28022GetBusCurrent(ISL28022_MASTER_ADDRES,ISL28022_MASTER_BUS,&modPowerElectronicsPackStateHandle->loCurrentLoadCurrent,initCurrentOffset, modPowerElectronicsGeneralConfigHandle->shuntLCFactor);
-		modPowerElectronicsPackStateHandle->loCurrentLoadCurrent = current_sense_read_10hz(initCurrentOffset, modPowerElectronicsGeneralConfigHandle->shuntLCFactor); 
+		driverSWISL28022GetBusCurrent(ISL28022_MASTER_ADDRES,ISL28022_MASTER_BUS,&modPowerElectronicsPackStateHandle->loCurrentLoadCurrent,initCurrentOffset, modPowerElectronicsGeneralConfigHandle->shuntLCFactor);
+		// current_sense_read_5hz(initCurrentOffset, modPowerElectronicsGeneralConfigHandle->shuntLCFactor); 
 		driverHWADCGetLoadVoltage(&modPowerElectronicsPackStateHandle->loCurrentLoadVoltage, modPowerElectronicsGeneralConfigHandle->loadVoltageOffset, modPowerElectronicsGeneralConfigHandle->loadVoltageFactor);
 		#if (ENNOID_SS_LITE)
 			modPowerElectronicsPackStateHandle->loCurrentLoadVoltage = 0;
