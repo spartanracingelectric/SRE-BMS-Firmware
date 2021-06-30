@@ -17,6 +17,7 @@ SRCS += ./Modules/Src/modUART.c
 SRCS += ./Modules/Src/report_status.c
 SRCS += ./Modules/Src/safety_check.c
 SRCS += ./Modules/Src/current_sense.c
+SRCS += ./Modules/Src/state_of_charge.c
 
 SRCS += ./Drivers/SWDrivers/Src/driverSWADC128D818.c
 #SRCS += ./Drivers/SWDrivers/Src/driverSWADS1015.c
