@@ -17,7 +17,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 #include "generalDefines.h"
 #include "stm32f3xx_hal.h"
 #include "modEffect.h"
@@ -77,7 +77,7 @@ int main(void) {
   safety_check_init(&packState); 
   report_status_init(&packState); 
   current_sense_init(&packState); 
-  // state_of_charge_init(&packState); 
+  state_of_charge_init(&packState); 
 
   while(true) {
 		modEffectTask();
@@ -90,10 +90,12 @@ int main(void) {
     // SRE Tasks
     safety_check_task(); 
     // state_of_charge_task(); 
-    report_status_task(); 
+    report_status_task();
+
+    state_of_charge_task(); 
 		
-		if(modPowerElectronicsTask())																						// Handle power electronics task
-			modStateOfChargeProcess();																						// If there is new data handle SoC estimation
+		// if(modPowerElectronicsTask())																						// Handle power electronics task
+		// 	modStateOfChargeProcess();																						// If there is new data handle SoC estimation
   }
 }
 
